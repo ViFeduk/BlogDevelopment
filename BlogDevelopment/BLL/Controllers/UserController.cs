@@ -8,9 +8,9 @@ namespace BlogDevelopment.BLL.Controllers
     public class UserController : Controller
     {
         private IUserService _userService;
-        private readonly UserManager<UserModel> _userManager;
-        private readonly SignInManager<UserModel> _signInManager;
-        public UserController(IUserService userService, UserManager<UserModel> userManager, SignInManager<UserModel> signInManager)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        public UserController(IUserService userService, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _userService = userService;
             _userManager = userManager;
@@ -32,7 +32,7 @@ namespace BlogDevelopment.BLL.Controllers
         // Обработка данных регистрации
         [HttpPost]
         [Route("Register")]
-        public async Task<IActionResult> Register(UserModel user, string password)
+        public async Task<IActionResult> Register(ApplicationUser user, string password)
         {
             if (ModelState.IsValid)
             {
@@ -74,7 +74,7 @@ namespace BlogDevelopment.BLL.Controllers
 
         // Обработка данных редактирования
         [HttpPut]
-        public async Task<IActionResult> Edit(UserModel user)
+        public async Task<IActionResult> Edit(ApplicationUser user)
         {
             if (ModelState.IsValid)
             {

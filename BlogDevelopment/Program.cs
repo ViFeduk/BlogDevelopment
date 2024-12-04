@@ -25,9 +25,9 @@ namespace BlogDevelopment
             options.ViewLocationFormats.Add("/PLL/Views/{1}/{0}.cshtml");
             options.ViewLocationFormats.Add("/PLL/Views/Shared/{0}.cshtml");
         });
-            builder.Services.AddScoped<IRepository<UserModel>, UserReposytory>();
+            builder.Services.AddScoped<IRepository<ApplicationUser>, UserReposytory>();
             builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddIdentity<UserModel, IdentityRole>()
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<MyAppContext>()
     .AddDefaultTokenProviders();
             var app = builder.Build();

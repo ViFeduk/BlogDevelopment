@@ -7,13 +7,13 @@ namespace BlogDevelopment.BLL.Services
 {
     public class UserService: IUserService
     {
-        private readonly IRepository<UserModel> _userRepository;
-        private readonly UserManager<UserModel> _userManager;
-        private readonly SignInManager<UserModel> _signInManager;
+        private readonly IRepository<ApplicationUser> _userRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public UserService(IRepository<UserModel> userRepository,
-                           UserManager<UserModel> userManager,
-                           SignInManager<UserModel> signInManager)
+        public UserService(IRepository<ApplicationUser> userRepository,
+                           UserManager<ApplicationUser> userManager,
+                           SignInManager<ApplicationUser> signInManager)
         {
             _userRepository = userRepository;
             _userManager = userManager;
@@ -54,23 +54,23 @@ namespace BlogDevelopment.BLL.Services
 
         }
 
-        public async Task<IEnumerable<UserModel>> GetAllUsersAsync()
+        public async Task<IEnumerable<ApplicationUser>> GetAllUsersAsync()
         {
             return await _userRepository.GetAll().ToListAsync();
         }
 
-        public async Task<UserModel?> GetUserByIdAsync(int userId)
+        public async Task<ApplicationUser?> GetUserByIdAsync(int userId)
         {
             return await _userRepository.GetByIdAsync(userId);
         }
 
-        public async Task RegisterUserAsync(UserModel user)
+        public async Task RegisterUserAsync(ApplicationUser user)
         {
             await _userRepository.CreateAsync(user);
             await _userRepository.SaveChangesAsync();
         }
 
-        public async Task UpdateUserAsync(UserModel user)
+        public async Task UpdateUserAsync(ApplicationUser user)
         {
             _userRepository.Update(user);
             await _userRepository.SaveChangesAsync();
