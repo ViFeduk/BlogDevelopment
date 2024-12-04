@@ -1,0 +1,36 @@
+﻿@model BlogDevelopment.BLL.BusinesModels.UserModel
+@{
+    ViewData["Title"] = "Профиль пользователя";
+}
+<h2>@ViewData["Title"]</h2>
+
+<div class="user-profile">
+    <div class="form-group">
+        <label for="Name">Имя:</label>
+        <p>@Model.Name</p>
+    </div>
+
+    <div class="form-group">
+        <label for="Lastname">Фамилия:</label>
+        <p>@Model.Lastname</p>
+    </div>
+
+    <div class="form-group">
+        <label for="Email">Электронная почта:</label>
+        <p>@Model.Email</p>
+    </div>
+
+    <div class="form-group">
+        <label for="Login">Логин:</label>
+        <p>@Model.Login</p>
+    </div>
+
+    <div class="form-group">
+        <label for="Pseudonym">Псевдоним:</label>
+        <p>@Model.Pseudonym</p>
+    </div>
+
+    <div class="form-group">
+        <a href="@Url.Action("Edit", "User", new { id = Model.Id })" class="btn btn-primary">Редактировать</a>
+    </div>
+</div>
