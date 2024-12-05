@@ -1,6 +1,6 @@
 ﻿using BlogDevelopment.BLL.BusinesModels;
 
-namespace BlogDevelopment.BLL.Services
+namespace BlogDevelopment.BLL.Services.Intarface
 {
     public interface IArticleService
     {

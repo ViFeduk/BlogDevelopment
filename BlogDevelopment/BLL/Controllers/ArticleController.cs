@@ -1,5 +1,5 @@
 ﻿using BlogDevelopment.BLL.BusinesModels;
-using BlogDevelopment.BLL.Services;
+using BlogDevelopment.BLL.Services.Intarface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
