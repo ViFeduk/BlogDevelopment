@@ -1,5 +1,7 @@
 ﻿using BlogDevelopment.BLL.BusinesModels;
 using BlogDevelopment.BLL.Services;
+using BlogDevelopment.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,11 +34,13 @@ namespace BlogDevelopment.BLL.Controllers
         // Обработка данных регистрации
         [HttpPost]
         [Route("Register")]
-        public async Task<IActionResult> Register(ApplicationUser user, string password)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
+
             if (ModelState.IsValid)
             {
-                var result = await _userManager.CreateAsync(user, password);
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email };
+                var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
                 {
@@ -46,11 +50,10 @@ namespace BlogDevelopment.BLL.Controllers
                     // Вход пользователя после регистрации
                     await _signInManager.SignInAsync(user, isPersistent: false);
 
-                    return RedirectToAction("Index", "Home");  // Перенаправление на главную страницу
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    // Обработка ошибок
                     foreach (var error in result.Errors)
                     {
                         ModelState.AddModelError(string.Empty, error.Description);
@@ -58,11 +61,12 @@ namespace BlogDevelopment.BLL.Controllers
                 }
             }
 
-            return View(user);  // Если модель невалидна или ошибка регистрации, возвращаемся к форме
+            return View(model); // Если не удалось, возвращаем форму с ошибками
         }
 
         // Отображение формы редактирования пользователя
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Edit(int id)
         {
             var user = await _userService.GetUserByIdAsync(id);
@@ -73,7 +77,7 @@ namespace BlogDevelopment.BLL.Controllers
         }
 
         // Обработка данных редактирования
-        [HttpPut]
+        [HttpPost]
         public async Task<IActionResult> Edit(ApplicationUser user)
         {
             if (ModelState.IsValid)

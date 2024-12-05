@@ -1,8 +1,35 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Добро пожаловать в наш блог!";
+    var userIsAuthenticated = User.Identity.IsAuthenticated;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container text-center mt-5">
+    <h1>Добро пожаловать в наш блог!</h1>
+    <p class="lead">Делитесь своими мыслями, читайте статьи и находите единомышленников.</p>
+
+    <div class="row mt-5">
+        @if (userIsAuthenticated)
+        {
+            <!-- Если пользователь авторизован -->
+            <div class="col-12">
+                <h3>Добро пожаловать, @User.Identity.Name!</h3>
+                <p>Перейдите в свой профиль, чтобы управлять статьями и комментариями.</p>
+                <a href="~/Profile" class="btn btn-primary btn-lg">Мой профиль</a>
+            </div>
+        }
+        else
+        {
+            <!-- Если пользователь не авторизован -->
+            <div class="col-md-6">
+                <h3>Уже с нами?</h3>
+                <p>Войдите в свой аккаунт, чтобы начать публиковать статьи или комментировать.</p>
+                <a href="~/Authentication/Login" class="btn btn-primary btn-lg">Вход</a>
+            </div>
+            <div class="col-md-6">
+                <h3>Новый пользователь?</h3>
+                <p>Зарегистрируйтесь, чтобы стать частью нашего сообщества.</p>
+                <a href="~/Authentication/Register" class="btn btn-success btn-lg">Регистрация</a>
+            </div>
+        }
+    </div>
 </div>

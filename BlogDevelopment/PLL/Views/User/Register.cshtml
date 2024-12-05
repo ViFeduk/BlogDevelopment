@@ -1,4 +1,4 @@
-﻿@model BlogDevelopment.BLL.BusinesModels.ApplicationUser
+﻿@model BlogDevelopment.Models.ViewModels.RegisterViewModel
 
 @{
     ViewData["Title"] = "Регистрация";
@@ -6,45 +6,39 @@
 
 <h2>@ViewData["Title"]</h2>
 
-@* <form asp-action="Register" method="post">
+<form asp-action="Register" method="post" class="form-horizontal">
     <div class="form-group">
-        <label for="Name">Имя</label>
-        <input type="text" class="form-control" id="Name" name="Name" asp-for="Name" required />
-        <span asp-validation-for="Name" class="text-danger"></span>
+        <label asp-for="UserName" class="control-label"></label>
+        <input asp-for="UserName" class="form-control" />
+        <span asp-validation-for="UserName" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label for="Lastname">Фамилия</label>
-        <input type="text" class="form-control" id="Lastname" name="Lastname" asp-for="Lastname" required />
-        <span asp-validation-for="Lastname" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label for="Email">Электронная почта</label>
-        <input type="email" class="form-control" id="Email" name="Email" asp-for="Email" required />
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label for="Login">Логин</label>
-        <input type="text" class="form-control" id="Login" name="Login" asp-for="Login" required />
-        <span asp-validation-for="Login" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label for="Pseudonym">Псевдоним</label>
-        <input type="text" class="form-control" id="Pseudonym" name="Pseudonym" asp-for="Pseudonym" />
-        <span asp-validation-for="Pseudonym" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label for="Password">Пароль</label>
-        <input type="password" class="form-control" id="Password" name="Password" asp-for="Password" required />
+        <label asp-for="Password" class="control-label"></label>
+        <input asp-for="Password" type="password" class="form-control" />
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
-</form> *@
+    <div class="form-group">
+        <label asp-for="ConfirmPassword" class="control-label"></label>
+        <input asp-for="ConfirmPassword" type="password" class="form-control" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Register</button>
+    </div>
+</form>
+
+<div>
+    <a href="@Url.Action("Login", "Account")">Уже есть аккаунт? Войдите здесь.</a>
+</div>
 
 @section Scripts {
     @{

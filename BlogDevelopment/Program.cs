@@ -9,13 +9,14 @@ namespace BlogDevelopment
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void  Main(string[] args)
         {
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            
+
             builder.Services.AddDbContext<MyAppContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefoultConnection")));
             builder.Services.AddControllersWithViews()
 
@@ -31,6 +32,14 @@ namespace BlogDevelopment
     .AddEntityFrameworkStores<MyAppContext>()
     .AddDefaultTokenProviders();
             var app = builder.Build();
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+                 
+            }
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -53,5 +62,6 @@ namespace BlogDevelopment
 
             app.Run();
         }
+        
     }
 }

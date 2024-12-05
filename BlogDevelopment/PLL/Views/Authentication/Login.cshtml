@@ -1,27 +1,30 @@
-﻿@model BlogDevelopment.BLL.BusinesModels.LoginModel
+﻿@model BlogDevelopment.Models.ViewModels.LoginModel
 
 @{
     ViewData["Title"] = "Login";
 }
 
-<h2>Login</h2>
+<div class="autent">
+    <form method="post" asp-controller="Authentication" asp-action="Login">
 
-<form asp-action="Login" method="post">
-    <div class="form-group">
-        <label for="Email">Email</label>
-        <input type="email" class="form-control" id="Email" name="Email" required />
-    </div>
-    <div class="form-group">
-        <label for="Password">Password</label>
-        <input type="password" class="form-control" id="Password" name="Password" required />
-    </div>
-
-    @if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
-    {
-        <div class="alert alert-danger">
-            @ViewData["ErrorMessage"]
+        <div asp-validation-summary="ModelOnly"></div>
+        <input type="hidden" asp-for="ReturnUrl" />
+        <div>
+            <label asp-for="Email"></label><br />
+            <input type="email" asp-for="Email" />
+            <span asp-validation-for="Email"></span>
         </div>
-    }
-
-    <button type="submit" class="btn btn-primary">Login</button>
-</form>
+        <div>
+            <label asp-for="Password"></label><br />
+            <input asp-for="Password" />
+            <span asp-validation-for="Password"></span>
+        </div>
+        <div>
+            <label asp-for="RememberMe"></label><br />
+            <input asp-for="RememberMe" />
+        </div>
+        <div>
+            <input type="submit" class="login" value="Войти" />
+        </div>
+    </form>
+</div>
