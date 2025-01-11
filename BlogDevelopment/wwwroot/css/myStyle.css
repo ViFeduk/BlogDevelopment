@@ -216,3 +216,78 @@
 .mt-3 {
     margin-top: 1rem;
 }
+
+.profile {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+    .profile h3 {
+        margin-bottom: 10px;
+    }
+
+    .profile p {
+        font-size: 16px;
+        color: #333;
+    }
+
+    .profile ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    .profile li {
+        font-size: 14px;
+        color: #555;
+    }
+
+/* Стили для списка статей */
+.articles {
+    margin-top: 30px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+    .articles h3 {
+        margin-bottom: 20px;
+    }
+
+    .articles ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    .articles li {
+        font-size: 16px;
+        color: #333;
+    }
+
+    .articles a {
+        text-decoration: none;
+        color: #007bff;
+    }
+
+        .articles a:hover {
+            text-decoration: underline;
+        }
+
+/* Кнопка создания статьи */
+.btn-create {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    font-size: 16px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+    .btn-create:hover {
+        background-color: #218838;
+    }

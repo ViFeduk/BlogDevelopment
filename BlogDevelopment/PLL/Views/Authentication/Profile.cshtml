@@ -1,28 +1,49 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using BlogDevelopment.BLL.BusinesModels
-@model BlogDevelopment.BLL.BusinesModels.ApplicationUser
-
-@{
-    ViewData["Title"] = "Профиль пользователя";
-    var roles = ViewBag.Roles as IList<string>;
-}
+﻿@model BlogDevelopment.Models.ViewModels.ProfileViewModel
 
 <h2>Профиль пользователя</h2>
 
-<div>
-    <h3>Информация о пользователе</h3>
+<div class="profile">
     <p><strong>Имя пользователя:</strong> @Model.UserName</p>
     <p><strong>Email:</strong> @Model.Email</p>
 
     <h4>Роли пользователя</h4>
     <ul>
-        @foreach (var role in roles)
+        @foreach (var role in Model.Roles)
         {
             <li>@role</li>
         }
     </ul>
 </div>
 
+<div class="articles">
+    <h3>Мои статьи</h3>
+    @if (Model.Articles.Any())
+    {
+        <ul>
+            @foreach (var article in Model.Articles)
+            {
+                <li>
+                    <a href="@Url.Action("Details", "Article", new { id = article.Id })">@article.Title</a>
+                    - @article.Description
+                        <div class="tags">
+                            <strong>Теги:</strong>
+                            @foreach (var tag in article.Tags)
+                            {
+                                <span class="tag">@tag.Name</span> <!-- Выводим название каждого тега -->
+                            }
+                        </div>
+                        <hr />
+                   
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>У вас пока нет статей.</p>
+    }
+</div>
+
 <div>
-    <a href="@Url.Action("Edit", "Account")">Изменить профиль</a>
+    <a class="btn-create" href="@Url.Action("Create", "Article")">Создать статью</a>
 </div>

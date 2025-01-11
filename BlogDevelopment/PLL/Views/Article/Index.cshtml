@@ -1,0 +1,31 @@
+﻿@model IEnumerable<BlogDevelopment.Models.ViewModels.ArticleViewModel>
+
+@{
+    ViewData["Title"] = "Все статьи";
+}
+
+<h1>Все статьи</h1>
+
+@if (!Model.Any())
+{
+    <p>На данный момент нет доступных статей.</p>
+}
+else
+{
+    @foreach (var article in Model)
+    {
+        <div class="article">
+            <h2>@article.Title</h2>
+            <p>@article.Description</p>
+
+            <div class="tags">
+                <strong>Теги:</strong>
+                @foreach (var tag in article.Tags)
+                {
+                    <span class="tag">@tag.Name</span> <!-- Выводим название каждого тега -->
+                }
+            </div>
+            <hr />
+        </div>
+    }
+}

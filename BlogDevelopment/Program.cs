@@ -29,10 +29,11 @@ namespace BlogDevelopment
             builder.Services.AddScoped<IRepository<ApplicationUser>, UserReposytory>();
             builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IArticleService, ArticleService>();
            
             builder.Services.AddScoped<ICommentService, CommentService>();
             builder.Services.AddScoped<ITagService, TagService>();
-          
+            
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 
     .AddEntityFrameworkStores<MyAppContext>()

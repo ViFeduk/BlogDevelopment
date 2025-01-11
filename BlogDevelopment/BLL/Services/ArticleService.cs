@@ -1,10 +1,11 @@
 ﻿using BlogDevelopment.BLL.BusinesModels;
+using BlogDevelopment.BLL.Services.Intarface;
 using BlogDevelopment.DAL.Reposytoryes;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlogDevelopment.BLL.Services
 {
-    public class ArticleService
+    public class ArticleService: IArticleService
     {
         private readonly IRepository<Article> _articleRepository;
 
@@ -15,7 +16,9 @@ namespace BlogDevelopment.BLL.Services
 
         public async Task<IEnumerable<Article>> GetAllAsync()
         {
-            return await _articleRepository.GetAll().ToListAsync(); 
+            return await _articleRepository.GetAll().Include(a => a.PostTags)
+        .ThenInclude(pt => pt.Tag)
+        .ToListAsync();
         }
 
         public async Task<Article?> GetByIdAsync(int id)
@@ -26,8 +29,10 @@ namespace BlogDevelopment.BLL.Services
         public async Task<IEnumerable<Article>> GetByUserIdAsync(string userId)
         {
             return await _articleRepository.GetAll()
-                .Where(article => article.UserId == userId)
-                .ToListAsync();
+        .Include(article => article.PostTags)        // Загружаем PostTags
+        .ThenInclude(postTag => postTag.Tag)         // Загружаем Tag из PostTags
+        .Where(article => article.UserId == userId) // Фильтруем по UserId
+        .ToListAsync();
         }
 
         public async Task CreateAsync(Article article)

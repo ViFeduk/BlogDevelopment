@@ -1,5 +1,6 @@
 ﻿using BlogDevelopment.BLL.BusinesModels;
 using BlogDevelopment.BLL.Services;
+using BlogDevelopment.BLL.Services.Intarface;
 using BlogDevelopment.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,11 +13,14 @@ namespace BlogDevelopment.BLL.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IArticleService _articleService;
 
-        public AuthenticationController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+
+        public AuthenticationController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IArticleService articleService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _articleService = articleService;
         }
 
         // Отображение страницы входа
@@ -124,9 +128,30 @@ namespace BlogDevelopment.BLL.Controllers
             }
 
             var roles = await _userManager.GetRolesAsync(user);
-            ViewBag.Roles = roles;
+           
+            var articles = await _articleService.GetByUserIdAsync(user.Id);
 
-            return View(user);  // Передаем пользователя и его роли в представление
+            var profileViewModel = new ProfileViewModel
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                Roles = roles.ToList(),
+                Articles = articles.Select(a => new ArticleProfileViewModel
+                {
+                    Id = a.Id,
+                    Title = a.Title,
+                    Description = a.Description,
+                    Tags = a.PostTags != null && a.PostTags.Any()
+                           ? a.PostTags.Select(at => new TagViewModel
+                           {
+                               // Предположим, что у каждого тега есть свойство Name
+                               Name = at.Tag.Name
+                           }).ToList()
+                           : new List<TagViewModel>() // Если тегов нет, просто пустой список
+                }).ToList()
+            };
+
+            return View(profileViewModel);
         }
     }
 }
