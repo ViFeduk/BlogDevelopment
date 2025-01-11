@@ -1,0 +1,30 @@
+﻿@model IEnumerable<BlogDevelopment.BLL.BusinesModels.Tag>
+
+@{
+    ViewData["Title"] = "Список тегов";
+}
+
+<div class="tag-list-container">
+    <h2>Список всех тегов</h2>
+
+    @if (Model.Any())
+    {
+        <ul class="tag-list">
+            @foreach (var tag in Model)
+            {
+                <li>
+                    <span class="tag-name">@tag.Name</span>
+                    <span class="tag-actions">
+                        <a asp-action="Edit" asp-route-id="@tag.Id">Изменить</a> |
+                        <a asp-action="Delete" asp-route-id="@tag.Id" class="delete-link">Удалить</a>
+                    </span>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>Теги отсутствуют.</p>
+    }
+    <a href="@Url.Action("AddTag", "Tag")">Добавить Тег</a>
+</div>

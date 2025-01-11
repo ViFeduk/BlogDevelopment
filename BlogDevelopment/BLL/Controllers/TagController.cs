@@ -1,5 +1,6 @@
 ﻿using BlogDevelopment.BLL.BusinesModels;
 using BlogDevelopment.BLL.Services.Intarface;
+using BlogDevelopment.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogDevelopment.BLL.Controllers
@@ -15,11 +16,14 @@ namespace BlogDevelopment.BLL.Controllers
 
         // Получить все теги
         [HttpGet]
+        [Route("/Tags")]
         public async Task<IActionResult> GetAll()
         {
-            var tags = await _tagService.GetAllAsync();
-            return Ok(tags);
+            var tags = await _tagService.GetAllAsync(); // Получаем список тегов через сервис
+            return View(tags); // Передаем список тегов в представление
         }
+
+       
 
         // Получить тег по ID
         [HttpGet("{id}")]
@@ -35,14 +39,27 @@ namespace BlogDevelopment.BLL.Controllers
 
         // Создать новый тег
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Tag tag)
+        [Route("/Tag/Create")]
+        public async Task<IActionResult> Create(TagViewModel tag)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return View(tag);
             }
-            await _tagService.CreateAsync(tag);
-            return CreatedAtAction(nameof(GetById), new { id = tag.Id }, tag);
+            var newTag = new Tag
+            {
+                Name = tag.Name
+            };
+            await _tagService.CreateAsync(newTag);
+            return RedirectToAction("GetAll");
+        }
+        [HttpGet]
+        [Route("/Tags/add")]
+       
+        public async Task<IActionResult> AddTag()
+        {
+            
+            return View(); // Передаем список тегов в представление
         }
 
         // Обновить тег

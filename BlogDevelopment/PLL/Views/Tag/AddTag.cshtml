@@ -1,0 +1,30 @@
+﻿@model BlogDevelopment.Models.ViewModels.TagViewModel
+@{
+    ViewData["Title"] = "Добавление тегов";
+}
+
+<!-- Общее сообщение об ошибках -->
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        Пожалуйста, исправьте ошибки в форме.
+    </div>
+}
+<div class="tag-container">
+    <h2>Добавить новый тег</h2>
+    <form asp-action="Create" asp-controller="Tag" method="post">
+    <div>
+        <label asp-for="Name">Название тега:</label><br />
+        <input asp-for="Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div>
+        <button type="submit" class="add-button">Добавить тег</button>
+    </div>
+</form>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
