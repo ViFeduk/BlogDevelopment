@@ -1,6 +1,8 @@
 ﻿using BlogDevelopment.BLL.BusinesModels;
 using BlogDevelopment.BLL.Services.Intarface;
 using BlogDevelopment.Models.ViewModels;
+using BlogDevelopment.Models.ViewModels.editModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogDevelopment.BLL.Controllers
@@ -61,23 +63,46 @@ namespace BlogDevelopment.BLL.Controllers
             
             return View(); // Передаем список тегов в представление
         }
-
-        // Обновить тег
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Tag tag)
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id != tag.Id)
+            var tag = await _tagService.GetByIdAsync(id);
+            if (tag == null)
             {
-                return BadRequest();
+                return NotFound("Тег не найден.");
             }
 
+            var model = new EditTagViewModel
+            {
+               Id = tag.Id,
+                Name = tag.Name,
+               
+            };
+
+            return View(model);
+        }
+        // Обновить тег
+       
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditTagViewModel model)
+        {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return View(model); // Вернуть страницу с ошибками валидации
             }
 
+            var tag = await _tagService.GetByIdAsync(model.Id);
+            if (tag == null)
+            {
+                return NotFound("Тег не найден.");
+            }
+
+            tag.Name = model.Name;
+            
+
             await _tagService.UpdateAsync(tag);
-            return NoContent();
+
+            return RedirectToAction("GetAll", "Tag"); // Перенаправить к списку тегов
         }
 
         // Удалить тег

@@ -291,3 +291,10 @@
     .btn-create:hover {
         background-color: #218838;
     }
+.role-badge {
+    background-color: #007bff; /* Синий фон для ролей */
+    color: white; /* Белый цвет текста */
+    padding: 5px 10px; /* Отступы для улучшения читаемости */
+    border-radius: 5px; /* Округленные углы */
+    margin-right: 5px; /* Отступ между ролями */
+}

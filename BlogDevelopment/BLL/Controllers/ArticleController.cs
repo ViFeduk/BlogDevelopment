@@ -2,6 +2,7 @@
 using BlogDevelopment.BLL.Services;
 using BlogDevelopment.BLL.Services.Intarface;
 using BlogDevelopment.Models.ViewModels;
+using BlogDevelopment.Models.ViewModels.editModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -29,16 +30,17 @@ namespace BlogDevelopment.BLL.Controllers
             var articles = await _articleService.GetAllAsync();
             var articleViewModels = articles.Select(a => new ArticleViewModel
             {
+                Id = a.Id, // Передаем Id статьи
                 Title = a.Title,
                 Description = a.Description,
                 Tags = a.PostTags?.Select(pt => new TagViewModel
                 {
                     Id = pt.TagId,
-                    Name = pt.Tag.Name, // Преобразуем теги в TagViewModel
-                    IsSelected = false // Вы можете изменить логику выбора тега, если это необходимо
-                }).ToList() ?? new List<TagViewModel>(), // Если PostTags == null, создаём пустой список
-                SelectedTagIds = a.PostTags?.Select(pt => pt.TagId).ToList() ?? new List<int>() // Если PostTags == null, создаём пустой список
+                    Name = pt.Tag.Name
+                }).ToList() ?? new List<TagViewModel>(),
+                SelectedTagIds = a.PostTags?.Select(pt => pt.TagId).ToList() ?? new List<int>()
             }).ToList();
+
             return View(articleViewModels);
         }
 
@@ -49,7 +51,7 @@ namespace BlogDevelopment.BLL.Controllers
             return View(articles);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
             var article = await _articleService.GetByIdAsync(id);
@@ -57,7 +59,19 @@ namespace BlogDevelopment.BLL.Controllers
             {
                 return NotFound();
             }
-            return View(article);
+
+            var articleViewModel = new ArticleViewModel
+            {
+                Title = article.Title,
+                Description = article.Description,
+                Tags = article.PostTags?.Select(pt => new TagViewModel
+                {
+                    Id = pt.TagId,
+                    Name = pt.Tag.Name
+                }).ToList() ?? new List<TagViewModel>()
+            };
+
+            return View(articleViewModel);
         }
 
         [HttpGet]
@@ -107,7 +121,7 @@ namespace BlogDevelopment.BLL.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> Edit(int id)
         {
@@ -116,21 +130,40 @@ namespace BlogDevelopment.BLL.Controllers
             {
                 return Unauthorized();
             }
-            return View(article);
+
+            var allTags = await _tagService.GetAllAsync(); // Получаем все доступные теги
+            var selectedTags = article.PostTags.Select(pt => pt.TagId).ToList(); // Получаем теги, связанные с этой статьей
+
+            var model = new EditArticleViewModel
+            {
+                Id = article.Id,
+                Title = article.Title,
+                Description = article.Description,
+                Tags = allTags.Select(tag => new TagViewModel
+                {
+                    Id = tag.Id,
+                    Name = tag.Name,
+                    IsSelected = selectedTags.Contains(tag.Id) // Отмечаем тег, если он выбран
+                }).ToList()
+            };
+
+            return View(model);
         }
 
+        [Authorize]
         [HttpPost("{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Article article)
+        public async Task<IActionResult> Edit(int id, EditArticleViewModel model)
         {
-            if (id != article.Id)
+            if (id != model.Id)
             {
                 return BadRequest();
             }
 
             if (!ModelState.IsValid)
             {
-                return View(article);
+               
+                return View(model);
             }
 
             var existingArticle = await _articleService.GetByIdAsync(id);
@@ -139,25 +172,50 @@ namespace BlogDevelopment.BLL.Controllers
                 return Unauthorized();
             }
 
-            existingArticle.Title = article.Title;
-            existingArticle.Description = article.Description;
+            // Обновление данных статьи
+            existingArticle.Title = model.Title;
+            existingArticle.Description = model.Description;
+
+            // Обновление тегов
+            var selectedTagIds = model.SelectedTagIds;
+            var currentTagIds = existingArticle.PostTags.Select(pt => pt.TagId).ToList();
+
+            // Убираем теги, которые были сняты
+            var tagsToRemove = existingArticle.PostTags.Where(pt => !selectedTagIds.Contains(pt.TagId)).ToList();
+            foreach (var tag in tagsToRemove)
+            {
+                existingArticle.PostTags.Remove(tag);
+            }
+
+            // Добавляем новые выбранные теги
+            var tagsToAdd = selectedTagIds.Where(tagId => !currentTagIds.Contains(tagId)).ToList();
+            foreach (var tagId in tagsToAdd)
+            {
+                existingArticle.PostTags.Add(new PostTag { ArticleId = existingArticle.Id, TagId = tagId });
+            }
 
             await _articleService.UpdateAsync(existingArticle);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index)); // Перенаправить на список статей
         }
 
-        [HttpPost("{id}")]
+        [Authorize]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var article = await _articleService.GetByIdAsync(id);
-            if (article == null || article.UserId != _userManager.GetUserId(User))
+            if (article == null)
+            {
+                return NotFound();
+            }
+
+            if (article.UserId != _userManager.GetUserId(User))
             {
                 return Unauthorized();
             }
 
             await _articleService.DeleteAsync(id);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Profile", "Authentication"); // Перенаправление на профиль
         }
     }
 }

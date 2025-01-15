@@ -23,7 +23,10 @@ namespace BlogDevelopment.BLL.Services
 
         public async Task<Article?> GetByIdAsync(int id)
         {
-            return await _articleRepository.GetByIdAsync(id);
+            return await _articleRepository.GetAll()
+         .Include(a => a.PostTags)           // Загружаем PostTags
+         .ThenInclude(pt => pt.Tag)          // Загружаем Tag из PostTags
+         .FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<IEnumerable<Article>> GetByUserIdAsync(string userId)
@@ -49,7 +52,7 @@ namespace BlogDevelopment.BLL.Services
 
         public async Task DeleteAsync(int id)
         {
-            var article = await _articleRepository.GetByIdAsync(id);
+            var article = await GetByIdAsync(id);
             if (article != null)
             {
                 _articleRepository.Delete(article);

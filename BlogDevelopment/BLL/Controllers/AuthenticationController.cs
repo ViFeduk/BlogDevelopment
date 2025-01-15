@@ -43,32 +43,27 @@ namespace BlogDevelopment.BLL.Controllers
 
                     if (result.Succeeded)
                     {
-                        // Получаем роли пользователя
-                        var roles = await _userManager.GetRolesAsync(user);
-
-                        // Создаем список клаймов для ролей
-                        var roleClaims = roles.Select(role => new Claim(ClaimTypes.Role, role)).ToList();
-
-                        // Добавляем клаймы ролей к текущему пользователю
-                        var claimsIdentity = new ClaimsIdentity(roleClaims, "login");
-                        var principal = new ClaimsPrincipal(claimsIdentity);
-
-                        // Устанавливаем клаймы для текущего пользователя
-                        await _signInManager.SignInAsync(user, isPersistent: model.RememberMe);
-
-                        // Применяем клаймы для пользователя
-                        HttpContext.User = principal;
-
-                        // Перенаправляем на главную страницу
+                        // Роли автоматически подтягиваются, если настроено корректно
                         return RedirectToAction("Profile");
                     }
 
-                    ModelState.AddModelError(string.Empty, "Неверный логин или пароль.");
+                    // Если вход не удался
+                    if (result.IsLockedOut)
+                    {
+                        ModelState.AddModelError(string.Empty, "Ваш аккаунт заблокирован.");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Неверный логин или пароль.");
+                    }
                 }
-
-               
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Пользователь с таким email не найден.");
+                }
             }
-            return View();
+
+            return View(model);
         }
 
         // Логика выхода

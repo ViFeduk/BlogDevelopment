@@ -15,7 +15,7 @@ else
     @foreach (var article in Model)
     {
         <div class="article">
-            <h2>@article.Title</h2>
+            <h2><a href="@Url.Action("Details", "Article", new { id = article.Id })">@article.Title</a></h2> <!-- Ссылка на детали статьи -->
             <p>@article.Description</p>
 
             <div class="tags">

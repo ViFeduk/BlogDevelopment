@@ -1,0 +1,17 @@
+﻿@model BlogDevelopment.Models.ViewModels.ArticleViewModel
+
+<h2>@Model.Title</h2>
+<p><strong>Описание:</strong></p>
+<p>@Model.Description</p>
+
+<div class="tags">
+    <strong>Теги:</strong>
+    @foreach (var tag in Model.Tags)
+    {
+        <span class="tag">@tag.Name</span> <!-- Отображаем название тега -->
+    }
+</div>
+
+<div class="mt-3">
+    <a class="btn btn-secondary" href="@Url.Action("Index", "Article")">Назад к списку</a>
+</div>

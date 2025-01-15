@@ -10,13 +10,14 @@ namespace BlogDevelopment.BLL.Services.Intarface
         Task UpdateUserAsync(ApplicationUser user);
 
         // Удаление пользователя
-        Task DeleteUserAsync(int userId);
+        Task DeleteUserAsync(string userId);
 
         // Получение всех пользователей
         Task<IEnumerable<ApplicationUser>> GetAllUsersAsync();
 
         // Получение пользователя по идентификатору
-        Task<ApplicationUser?> GetUserByIdAsync(int userId);
+        Task<ApplicationUser?> GetUserByIdAsync(string userId);
+
         Task<bool> LoginUserAsync(string username, string password);
     }
 }

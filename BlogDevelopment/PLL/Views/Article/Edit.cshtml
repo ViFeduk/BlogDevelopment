@@ -1,0 +1,31 @@
+﻿@model BlogDevelopment.Models.ViewModels.editModels.EditArticleViewModel
+
+@{
+    ViewData["Title"] = "Редактировать статью";
+}
+
+<form asp-action="Edit" method="post">
+    <div class="form-group">
+        <label for="Title">Заголовок</label>
+        <input type="text" class="form-control" id="Title" name="Title" value="@Model.Title" required />
+    </div>
+    <div class="form-group">
+        <label for="Description">Описание</label>
+        <textarea class="form-control" id="Description" name="Description" rows="4" required>@Model.Description</textarea>
+    </div>
+
+    <h3>Теги</h3>
+    <div class="form-group">
+        @foreach (var tag in Model.Tags)
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="tag_@tag.Id" name="SelectedTagIds" value="@tag.Id" @(tag.IsSelected ? "checked" : "") />
+                <label class="form-check-label" for="tag_@tag.Id">
+                    @tag.Name
+                </label>
+            </div>
+        }
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+</form>
+<a href="@Url.Action("Index", "Article")" class="btn btn-secondary mt-3">Отмена</a>

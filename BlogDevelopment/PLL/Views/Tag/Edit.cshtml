@@ -1,0 +1,22 @@
+﻿@model BlogDevelopment.Models.ViewModels.editModels.EditTagViewModel
+
+<h2>Редактирование тега</h2>
+
+<form asp-action="Edit" method="post">
+    <div class="form-group">
+        <label asp-for="Name">Название</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+
+   
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a asp-action="GetAll" class="btn btn-secondary">Отмена</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

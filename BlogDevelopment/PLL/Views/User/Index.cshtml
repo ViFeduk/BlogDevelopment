@@ -1,0 +1,35 @@
+﻿@model IEnumerable<BlogDevelopment.Models.ViewModels.UserViewModel>
+
+<h2>Все пользователи</h2>
+
+@if (!Model.Any())
+{
+    <p>На данный момент нет пользователей.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Имя пользователя</th>
+                <th>Email</th>
+                <th>Роли</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>
+                        @foreach (var role in user.Roles)
+                        {
+                            <span class="badge badge-info role-badge">@role</span> <!-- Отображение ролей -->
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

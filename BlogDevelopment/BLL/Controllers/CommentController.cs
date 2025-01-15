@@ -1,5 +1,6 @@
 ﻿using BlogDevelopment.BLL.BusinesModels;
 using BlogDevelopment.BLL.Services.Intarface;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogDevelopment.BLL.Controllers
@@ -9,10 +10,12 @@ namespace BlogDevelopment.BLL.Controllers
     public class CommentController : ControllerBase
     {
         private readonly ICommentService _commentService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CommentController(ICommentService commentService)
+        public CommentController(ICommentService commentService, UserManager<ApplicationUser> userManager)
         {
             _commentService = commentService;
+            _userManager = userManager;
         }
 
         // Получить все комментарии
@@ -37,14 +40,28 @@ namespace BlogDevelopment.BLL.Controllers
 
         // Создать новый комментарий
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Comment comment)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddComment(int articleId, string commentText)
         {
-            if (!ModelState.IsValid)
+            if (string.IsNullOrEmpty(commentText))
             {
-                return BadRequest(ModelState);
+                ModelState.AddModelError(string.Empty, "Комментарий не может быть пустым.");
+                return RedirectToAction("Details", "Article", new { id = articleId });
             }
-            await _commentService.CreateAsync(comment);
-            return CreatedAtAction(nameof(GetById), new { id = comment.Id }, comment);
+
+            var user = await _userManager.GetUserAsync(User);
+
+            var comment = new Comment
+            {
+                Text = commentText,
+                UserId = user.Id,
+                ArticleId = articleId,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _commentService.AddCommentAsync(comment);
+
+            return RedirectToAction("Details", "Article", new { id = articleId });
         }
 
         // Обновить комментарий

@@ -30,6 +30,9 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Article" asp-action="Index">Статьи</a>
+                            </li> 
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Все пользователи</a>
                             </li>
                         }
                         
@@ -43,7 +46,9 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Profile">Профиль</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Logout">Выход</a>
+                                <form asp-area="" asp-controller="Authentication" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-link nav-link text-dark">Выход</button>
+                                </form>
                             </li>
                         }
                         else
