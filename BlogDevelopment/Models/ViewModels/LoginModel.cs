@@ -5,11 +5,13 @@ namespace BlogDevelopment.Models.ViewModels
 {
     public class LoginModel
     {
-        [Required]
+        [Required(ErrorMessage = "Логин обязателен.")]
+        [EmailAddress(ErrorMessage = "Некорректный формат email.")]
         [Display(Name = "Логин")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Пароль обязателен.")]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Пароль должен быть не менее 6 символов.")]
         [DataType(DataType.Password)]
         [Display(Name = "Пароль")]
         public string Password { get; set; }

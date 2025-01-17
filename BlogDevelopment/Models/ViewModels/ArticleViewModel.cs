@@ -5,26 +5,23 @@ namespace BlogDevelopment.Models.ViewModels
 {
     public class ArticleViewModel
     {
+        public int Id { get; set; }
         public ArticleViewModel()
         {
             Tags = new List<TagViewModel>();
             SelectedTagIds = new List<int>();
-            Comments = new List<CommentViewModel>(); // Новый список для комментариев
         }
-
         [Required(ErrorMessage = "Название статьи обязательно")]
+        [StringLength(200, ErrorMessage = "Длина названия статьи не должна превышать 200 символов.")]
         public string Title { get; set; }
 
-        [StringLength(300, ErrorMessage = "Длина названия не должна превышать 300 символов")]
+        [StringLength(30000, ErrorMessage = "Длина названия не должна превышать 30000 символов")]
         public string Description { get; set; }
 
-        public List<TagViewModel> Tags { get; set; }
-        public List<int> SelectedTagIds { get; set; }
-
-        // Новый список для комментариев
+        public List<TagViewModel> Tags { get; set; } // Список доступных тегов
+        public List<int> SelectedTagIds { get; set; } // Список ID выбранных тегов
         public List<CommentViewModel> Comments { get; set; }
     }
-
     public class CommentViewModel
     {
         public string UserName { get; set; }

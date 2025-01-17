@@ -8,8 +8,29 @@
     <strong>Теги:</strong>
     @foreach (var tag in Model.Tags)
     {
-        <span class="tag">@tag.Name</span> <!-- Отображаем название тега -->
+        <span class="tag">@tag.Name</span>
     }
+</div>
+
+<hr />
+
+<!-- Секция комментариев -->
+<div class="comments">
+    <h3>Комментарии</h3>
+
+    <div id="comments-section">
+        @await Html.PartialAsync("_CommentsList", Model.Comments)
+    </div>
+
+    <!-- Форма добавления комментария -->
+    <form asp-controller="Comment" asp-action="AddComment" method="post">
+        <input type="hidden" name="articleId" value="@Model.Id" />
+        <div class="form-group">
+            <label for="commentText">Оставьте комментарий:</label>
+            <textarea id="commentText" name="commentText" class="form-control" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Добавить комментарий</button>
+    </form>
 </div>
 
 <div class="mt-3">

@@ -5,6 +5,7 @@ using BlogDevelopment.DAL.DataBase;
 using BlogDevelopment.DAL.Reposytoryes;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NLog.Web;
 
 namespace BlogDevelopment
 {
@@ -13,7 +14,12 @@ namespace BlogDevelopment
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            builder.Logging.ClearProviders();  // Очищаем стандартные провайдеры логирования
+            builder.Host.ConfigureLogging(logging =>
+            {
+                logging.ClearProviders(); // Очищаем стандартные логеры
+                logging.SetMinimumLevel(LogLevel.Trace); // Устанавливаем минимальный уровень логирования
+            }).UseNLog();
             // Добавление контекста базы данных
             builder.Services.AddDbContext<MyAppContext>(options =>
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefoultConnection")));
@@ -55,6 +61,7 @@ namespace BlogDevelopment
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseStatusCodePagesWithRedirects("/Error/{0}"); // Для 404 и других ошибок
                 app.UseHsts();
             }
 
@@ -62,6 +69,11 @@ namespace BlogDevelopment
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
+
+            // Настройка обработки ошибок
+            app.UseExceptionHandler("/Error/Index"); // Обрабатывает ошибки 500
+
+            
 
             app.MapControllerRoute(
                 name: "default",

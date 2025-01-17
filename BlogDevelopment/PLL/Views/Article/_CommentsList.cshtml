@@ -1,0 +1,18 @@
+﻿@model List<BlogDevelopment.Models.ViewModels.CommentViewModel>
+
+@if (Model.Any())
+{
+    <ul>
+        @foreach (var comment in Model)
+        {
+            <li>
+                <strong>@comment.UserName</strong> <span>@comment.CreatedAt.ToString("g")</span>
+                <p>@comment.Text</p>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>Пока нет комментариев.</p>
+}

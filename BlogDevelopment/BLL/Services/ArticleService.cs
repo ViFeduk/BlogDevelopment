@@ -24,9 +24,11 @@ namespace BlogDevelopment.BLL.Services
         public async Task<Article?> GetByIdAsync(int id)
         {
             return await _articleRepository.GetAll()
-         .Include(a => a.PostTags)           // Загружаем PostTags
-         .ThenInclude(pt => pt.Tag)          // Загружаем Tag из PostTags
-         .FirstOrDefaultAsync(a => a.Id == id);
+       .Include(a => a.PostTags)           // Загружаем PostTags
+           .ThenInclude(pt => pt.Tag)      // Загружаем Tag из PostTags
+       .Include(a => a.Comments)           // Загружаем связанные комментарии
+           .ThenInclude(c => c.User)       // Если нужно, загружаем пользователей, оставивших комментарии
+       .FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<IEnumerable<Article>> GetByUserIdAsync(string userId)

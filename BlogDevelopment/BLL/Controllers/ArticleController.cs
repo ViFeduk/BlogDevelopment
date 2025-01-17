@@ -6,6 +6,7 @@ using BlogDevelopment.Models.ViewModels.editModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using NLog;
 
 namespace BlogDevelopment.BLL.Controllers
 {
@@ -16,6 +17,7 @@ namespace BlogDevelopment.BLL.Controllers
         private readonly IArticleService _articleService;
         private readonly ITagService _tagService;
         private readonly UserManager<ApplicationUser> _userManager;
+       
 
         public ArticleController(IArticleService articleService, UserManager<ApplicationUser> userManager, ITagService tagService)
         {
@@ -62,13 +64,20 @@ namespace BlogDevelopment.BLL.Controllers
 
             var articleViewModel = new ArticleViewModel
             {
+                Id = article.Id,
                 Title = article.Title,
                 Description = article.Description,
                 Tags = article.PostTags?.Select(pt => new TagViewModel
                 {
                     Id = pt.TagId,
                     Name = pt.Tag.Name
-                }).ToList() ?? new List<TagViewModel>()
+                }).ToList() ?? new List<TagViewModel>(),
+                 Comments = article.Comments?.Select(c => new CommentViewModel
+                 {
+                     UserName = c.User.UserName,
+                     Text = c.Text,
+                     CreatedAt = c.CreatedAt
+                 }).ToList() ?? new List<CommentViewModel>()
             };
 
             return View(articleViewModel);
@@ -217,5 +226,6 @@ namespace BlogDevelopment.BLL.Controllers
             await _articleService.DeleteAsync(id);
             return RedirectToAction("Profile", "Authentication"); // Перенаправление на профиль
         }
+
     }
 }
