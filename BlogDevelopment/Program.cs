@@ -14,12 +14,7 @@ namespace BlogDevelopment
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Logging.ClearProviders();  // ќчищаем стандартные провайдеры логировани€
-            builder.Host.ConfigureLogging(logging =>
-            {
-                logging.ClearProviders(); // ќчищаем стандартные логеры
-                logging.SetMinimumLevel(LogLevel.Trace); // ”станавливаем минимальный уровень логировани€
-            }).UseNLog();
+            
             // ƒобавление контекста базы данных
             builder.Services.AddDbContext<MyAppContext>(options =>
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefoultConnection")));
